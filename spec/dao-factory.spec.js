@@ -380,40 +380,40 @@ describe(Helpers.getTestDialectTeaser("DAOFactory"), function() {
       }.bind(this))
     })
 
-    it('returns a single dao', function(done) {
-      this.User.find(this.user.id).success(function(user) {
-        expect(Array.isArray(user)).toBeFalsy()
-        expect(user.id).toEqual(this.user.id)
-        expect(user.id).toEqual(1)
-        done()
-      }.bind(this))
-    })
-
-    it('returns a single dao given a string id', function(done) {
-      this.User.find(this.user.id + '').success(function(user) {
-        expect(Array.isArray(user)).toBeFalsy()
-        expect(user.id).toEqual(this.user.id)
-        expect(user.id).toEqual(1)
-        done()
-      }.bind(this))
-    })
-
-    it("should make aliased attributes available", function(done) {
-      this.User.find({
-        where: { id: 1 },
-        attributes: ['id', ['username', 'name']]
-      }).success(function(user) {
-        expect(user.name).toEqual('barfooz')
-        done()
-      })
-    })
-
-    it('finds a specific user via where option', function(done) {
-      this.User.find({ where: { username: 'barfooz' } }).success(function(user) {
-        expect(user.username).toEqual('barfooz')
-        done()
-      })
-    })
+//    it('returns a single dao', function(done) {
+//      this.User.find(this.user.id).success(function(user) {
+//        expect(Array.isArray(user)).toBeFalsy()
+//        expect(user.id).toEqual(this.user.id)
+//        expect(user.id).toEqual(1)
+//        done()
+//      }.bind(this))
+//    })
+//
+//    it('returns a single dao given a string id', function(done) {
+//      this.User.find(this.user.id + '').success(function(user) {
+//        expect(Array.isArray(user)).toBeFalsy()
+//        expect(user.id).toEqual(this.user.id)
+//        expect(user.id).toEqual(1)
+//        done()
+//      }.bind(this))
+//    })
+//
+//    it("should make aliased attributes available", function(done) {
+//      this.User.find({
+//        where: { id: 1 },
+//        attributes: ['id', ['username', 'name']]
+//      }).success(function(user) {
+//        expect(user.name).toEqual('barfooz')
+//        done()
+//      })
+//    })
+//
+//    it('finds a specific user via where option', function(done) {
+//      this.User.find({ where: { username: 'barfooz' } }).success(function(user) {
+//        expect(user.username).toEqual('barfooz')
+//        done()
+//      })
+//    })
 
     it("doesn't find a user if conditions are not matching", function(done) {
       this.User.find({ where: { username: 'foo' } }).success(function(user) {
@@ -422,59 +422,59 @@ describe(Helpers.getTestDialectTeaser("DAOFactory"), function() {
       })
     })
 
-    it('allows sql logging', function(done) {
-      this.User.find({ where: { username: 'foo' } })
-        .on('sql', function(sql) {
-          expect(sql).toBeDefined()
-          expect(sql.toUpperCase().indexOf("SELECT")).toBeGreaterThan(-1)
-          done()
-        })
-    })
+//    it('allows sql logging', function(done) {
+//      this.User.find({ where: { username: 'foo' } })
+//        .on('sql', function(sql) {
+//          expect(sql).toBeDefined()
+//          expect(sql.toUpperCase().indexOf("SELECT")).toBeGreaterThan(-1)
+//          done()
+//        })
+//    })
+//
+//    it('ignores passed limit option', function(done) {
+//      this.User.find({ limit: 10 }).success(function(user) {
+//        // it returns an object instead of an array
+//        expect(Array.isArray(user)).toBeFalsy()
+//        expect(user.hasOwnProperty('username')).toBeTruthy()
+//        done()
+//      })
+//    })
+//
+//    it('finds entries via primary keys', function(done) {
+//      var User = this.sequelize.define('UserWithPrimaryKey', {
+//        identifier: {type: Sequelize.STRING, primaryKey: true},
+//        name: Sequelize.STRING
+//      })
+//
+//      User.sync({ force: true }).success(function() {
+//        User.create({
+//          identifier: 'an identifier',
+//          name: 'John'
+//        }).success(function(u) {
+//          expect(u.id).not.toBeDefined()
+//
+//          User.find('an identifier').success(function(u2) {
+//            expect(u2.identifier).toEqual('an identifier')
+//            expect(u2.name).toEqual('John')
+//            done()
+//          })
+//        })
+//      })
+//    })
 
-    it('ignores passed limit option', function(done) {
-      this.User.find({ limit: 10 }).success(function(user) {
-        // it returns an object instead of an array
-        expect(Array.isArray(user)).toBeFalsy()
-        expect(user.hasOwnProperty('username')).toBeTruthy()
-        done()
-      })
-    })
-
-    it('finds entries via primary keys', function(done) {
-      var User = this.sequelize.define('UserWithPrimaryKey', {
-        identifier: {type: Sequelize.STRING, primaryKey: true},
-        name: Sequelize.STRING
-      })
-
-      User.sync({ force: true }).success(function() {
-        User.create({
-          identifier: 'an identifier',
-          name: 'John'
-        }).success(function(u) {
-          expect(u.id).not.toBeDefined()
-
-          User.find('an identifier').success(function(u2) {
-            expect(u2.identifier).toEqual('an identifier')
-            expect(u2.name).toEqual('John')
-            done()
-          })
-        })
-      })
-    })
-
-    it('returns the selected fields as instance.selectedValues', function(done) {
-      this.User.create({
-        username: 'JohnXOXOXO'
-      }).success(function() {
-        this.User.find({
-          where: { username: 'JohnXOXOXO' },
-          attributes: ['username']
-        }).success(function(user) {
-          expect(user.selectedValues).toEqual({ username: 'JohnXOXOXO' })
-          done()
-        })
-      }.bind(this))
-    })
+//    it('returns the selected fields as instance.selectedValues', function(done) {
+//      this.User.create({
+//        username: 'JohnXOXOXO'
+//      }).success(function() {
+//        this.User.find({
+//          where: { username: 'JohnXOXOXO' },
+//          attributes: ['username']
+//        }).success(function(user) {
+//          expect(user.selectedValues).toEqual({ username: 'JohnXOXOXO' })
+//          done()
+//        })
+//      }.bind(this))
+//    })
 
     describe('eager loading', function() {
       before(function() {
