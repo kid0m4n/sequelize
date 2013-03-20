@@ -1,7 +1,8 @@
-if(typeof require === 'function') {
+if (typeof require === 'function') {
   const buster  = require("buster")
-      , Helpers = require('./buster-helpers')
-      , dialect = Helpers.getTestDialect()
+  , Helpers = require('./buster-helpers')
+  , dialect = Helpers.getTestDialect()
+  , native = Helpers.getNativity()
 }
 
 var qq = function(str) {
@@ -45,12 +46,30 @@ describe(Helpers.getTestDialectTeaser("Sequelize"), function() {
       })
 
       this.insertQuery = "INSERT INTO " + qq(this.User.tableName) + " (username, " + qq("createdAt") + ", " + qq("updatedAt") + ") VALUES ('john', '2012-01-01 10:10:10', '2012-01-01 10:10:10')"
-
       this.User.sync().success(done).error(function(err) {
         console(err)
         done()
       })
     })
+
+    if (dialect == 'mysql' && !native) {
+      it('executes stored procedures', function(done) {
+        this.sequelize.query(this.insertQuery).success(function() {
+          this.sequelize.query('DROP PROCEDURE IF EXISTS foo').success(function() {
+            this.sequelize.query(
+              "CREATE PROCEDURE foo()\nSELECT * FROM " + this.User.tableName + ";"
+            ).success(function() {
+              this.sequelize.query('CALL foo()').complete(function(err, users) {
+                expect(users.map(function(u){ return u.username })).toEqual(['john'])
+                done()
+              })
+            }.bind(this))
+          }.bind(this))
+        }.bind(this))
+      })
+    } else {
+      console.log('FIXME: I want to be supported in this dialect as well :-(')
+    }
 
     it('executes a query the internal way', function(done) {
       this.sequelize.query(this.insertQuery, null, { raw: true })
@@ -105,25 +124,6 @@ describe(Helpers.getTestDialectTeaser("Sequelize"), function() {
           })
       }.bind(this))
     })
-
-    if (dialect == 'mysql') {
-      it('executes stored procedures', function(done) {
-        this.sequelize.query(this.insertQuery).success(function() {
-          this.sequelize.query('DROP PROCEDURE IF EXISTS foo').success(function() {
-            this.sequelize.query(
-              "CREATE PROCEDURE foo()\nSELECT * FROM " + this.User.tableName + ";"
-            ).success(function() {
-              this.sequelize.query('CALL foo()').success(function(users) {
-                expect(users.map(function(u){ return u.username })).toEqual(['john'])
-                done()
-              })
-            }.bind(this))
-          }.bind(this))
-        }.bind(this))
-      })
-    } else {
-      console.log('FIXME: I want to be supported in this dialect as well :-(')
-    }
 
     it('uses the passed DAOFactory', function(done) {
       this.sequelize.query(this.insertQuery).success(function() {

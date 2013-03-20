@@ -83,6 +83,12 @@ var BusterHelpers = module.exports = {
     return envDialect
   },
 
+  getNativity: function() {
+    var envDialect = process.env.DIALECT || 'mysql'
+
+    return envDialect.match(/native/)
+  },
+
   getTestDialectTeaser: function(moduleName) {
     var dialect = this.getTestDialect()
 
